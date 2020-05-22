@@ -6,9 +6,14 @@
 
 #include "FlyQueue.h"
 
+#include <SDL2/SDL_image.h>
 
 namespace LuaRect
 {
+    /**
+     * fly.矩形.创建(x,y,w,h)
+     * fly.矩形.创建A(x,y,w,h)
+    */
     int CreateRect(lua_State *l)
     {
         SDL_Rect *rect = new SDL_Rect();
@@ -20,6 +25,9 @@ namespace LuaRect
         return 1;
     }
 
+    /**
+     * fly.矩形.创建B(x,y,w,h)
+    */
     int CreateFRect(lua_State *l)
     {
         SDL_FRect *rect = new SDL_FRect();
@@ -32,10 +40,34 @@ namespace LuaRect
     }
 } // namespace LuaRect
 
+namespace LuaTexture
+{
+    /**
+     * fly.图像.加载(renderer,图像路径)
+    */
+    int LoadTexture(lua_State *l)
+    {
+        lua_pushlightuserdata(l,IMG_LoadTexture((SDL_Renderer*)lua_touserdata(l,1),lua_tostring(l,2)));
+    }
+
+    /**
+     * fly.图像.加载XPM图像数组(renderer,图像数组)
+    */
+    int LoadXPM(lua_State *l)
+    {
+        SDL_Surface *surface = IMG_ReadXPMFromArray((char**)lua_touserdata(l,2));
+        SDL_Texture *texture = SDL_CreateTextureFromSurface((SDL_Renderer*)lua_touserdata(l,1),surface);
+        SDL_FreeSurface(surface);
+        lua_pushlightuserdata(l,texture);
+    }
+} // namespace LuaTexture
 
 
 namespace LuaFlySprite
 {
+    /**
+     * fly.精灵.创建()
+    */
     int Create(lua_State *l)
     {
         lua_pushlightuserdata(l,new FlySprite());
@@ -43,7 +75,7 @@ namespace LuaFlySprite
     }
 
     /**
-     * fly.精灵.获取图像()
+     * fly.精灵.获取图像(精灵)
     */
     int GetTexture(lua_State *l)
     {
@@ -52,8 +84,8 @@ namespace LuaFlySprite
     }
 
     /**
-     * fly.精灵.获取裁剪()
-     * fly.精灵.获取剪裁()
+     * fly.精灵.获取裁剪(精灵)
+     * fly.精灵.获取剪裁(精灵)
     */
     int GetSrcRect(lua_State *l)
     {
@@ -62,7 +94,7 @@ namespace LuaFlySprite
     }
 
     /**
-     * fly.精灵.获取旋转()
+     * fly.精灵.获取旋转(精灵)
     */
     int GetAngle(lua_State *l)
     {
@@ -71,7 +103,7 @@ namespace LuaFlySprite
     }
 
     /**
-     * fly.精灵.获取翻转()
+     * fly.精灵.获取翻转(精灵)
     */
     int GetFlip(lua_State *l)
     {
@@ -158,12 +190,18 @@ namespace LuaFlySprite
 
 namespace LuaFlyGalScene
 {
+    /**
+     * fly.gal.场景.创建()
+    */
     int Create(lua_State *l)
     {
         lua_pushlightuserdata(l,new FlyGalScene());
         return 1;
     }
 
+    /**
+     * fly.gal.场景.设置背景(场景,精灵)
+    */
     int SetBackground(lua_State *l)
     {
         FlyGalScene *scene = (FlyGalScene*)lua_touserdata(l,1);
@@ -192,6 +230,9 @@ namespace LuaFlyGalScene
         return 1;
     }
 
+    /**
+     * fly.gal.场景.绘制(renderer,场景)
+    */
     int RenderA(lua_State *l)
     {
         FlyGalScene *scene = (FlyGalScene*)lua_touserdata(l,2);
@@ -202,12 +243,18 @@ namespace LuaFlyGalScene
 
 namespace LuaFlyGalCharacter
 {
+    /**
+     * fly.gal.人物.创建(name)
+    */
     int Create(lua_State *l)
     {
         lua_pushlightuserdata(l,new FlyGalCharacter(lua_tostring(l,1)));
         return 1;
     }
 
+    /**
+     * fly.gal.人物.设置图像(人物,图像)
+    */
     int SetTexture(lua_State *l)
     {
         FlyGalCharacter *character = (FlyGalCharacter*)lua_touserdata(l,1);
@@ -215,12 +262,19 @@ namespace LuaFlyGalCharacter
         return 1;
     }
 
+    /**
+     * fly.gal.人物.获取名字(人物)
+    */
     int GetName(lua_State *l)
     {
         lua_pushstring(l,((FlyGalCharacter*)lua_touserdata(l,1))->GetName().c_str());
         return 1;
     }
 
+    /**
+     * fly.gal.人物.绘制(renderer,人物)
+     * fly.gal.人物.绘制A(renderer,人物)
+    */
     int RenderA(lua_State *l)
     {
         return 1;
@@ -302,7 +356,7 @@ namespace LuaFlyGalGame
             {
             case SDL_MOUSEBUTTONDOWN:
                 game_next = true;
-                printf("mouse_button_down\n");
+                //printf("mouse_button_down\n");
                 break;
             }
         }
@@ -360,6 +414,23 @@ FlyGalLua::FlyGalLua(lua_State *l)
 
     //Rect
     lua_settable(l,-3);
+
+
+    //Rect
+    lua_pushstring(l,"图像");
+
+    //Rect下函数
+    lua_newtable(l);
+    lua_pushstring(l,"加载");
+    lua_pushcfunction(l,LuaTexture::LoadTexture);
+    lua_settable(l,-3);
+    lua_pushstring(l,"加载XPM图像数组");
+    lua_pushcfunction(l,LuaTexture::LoadXPM);
+    lua_settable(l,-3);
+
+    //Rect
+    lua_settable(l,-3);
+
 
     //精灵
     lua_pushstring(l,"精灵");

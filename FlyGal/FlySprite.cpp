@@ -13,6 +13,7 @@ FlySprite::FlySprite()
 FlySprite::FlySprite(SDL_Renderer *renderer,const char *path)
 {
     this->texture = IMG_LoadTexture(renderer,path);
+    //IMG_ReadXPMFromArray(NULL);
 }
 
 FlySprite::FlySprite(SDL_Texture *texture)
