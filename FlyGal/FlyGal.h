@@ -7,8 +7,8 @@
 
 
 
-#include "FlyScene.h"
-#include "FlyCharacter.h"
+#include "FlyGalScene.h"
+#include "FlyGalCharacter.h"
 #include "FlyGalLua.h"
 
 

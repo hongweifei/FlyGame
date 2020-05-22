@@ -27,6 +27,7 @@ public:
 
     void SetTexture(SDL_Texture *texture);
     void SetSrcRect(SDL_Rect *rect);
+    void SetSrcRect(int x,int y,int w,int h);
     void SetAngle(double angle);
     void SetFlip(SDL_RendererFlip flip);
 

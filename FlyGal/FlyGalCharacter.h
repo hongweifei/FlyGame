@@ -3,8 +3,8 @@
 #include <string>
 #include "FlySprite.h"
 
-#ifndef FLYCHARACTER
-#define FLYCHARACTER
+#ifndef FLYGALCHARACTER
+#define FLYGALCHARACTER
 
 
 class FlyGalCharacter
@@ -19,7 +19,7 @@ public:
     FlyGalCharacter(std::string name,SDL_Texture* texture);
     ~FlyGalCharacter();
 
-    void SetImage(SDL_Texture* texture);
+    void SetTexture(SDL_Texture* texture);
     std::string GetName();
 
     void Render(SDL_Renderer *renderer);

@@ -27,7 +27,6 @@ FlyQueue<T>::FlyQueue()
     this->prev = this;
     this->next = this;
     this->data = NULL;
-    this->count = 0;
 }
 
 template<typename T>
@@ -46,6 +45,7 @@ void FlyQueue<T>::Add(T data)
     q->prev = this->prev;
 
     this->prev->next = q;
+    this->prev = q;
 }
 
 template<typename T>

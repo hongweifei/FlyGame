@@ -45,6 +45,15 @@ void FlySprite::SetSrcRect(SDL_Rect *rect)
     this->src_rect = rect;
 }
 
+void FlySprite::SetSrcRect(int x,int y,int w,int h)
+{
+    this->src_rect = new SDL_Rect();
+    this->src_rect->x = x;
+    this->src_rect->y = y;
+    this->src_rect->w = w;
+    this->src_rect->h = h;
+}
+
 void FlySprite::SetAngle(double angle)
 {
     this->angle = angle;

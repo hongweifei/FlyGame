@@ -1,6 +1,6 @@
 
 
-#include "FlyCharacter.h"
+#include "FlyGalCharacter.h"
 
 
 FlyGalCharacter::FlyGalCharacter(std::string name)
@@ -20,7 +20,7 @@ FlyGalCharacter::~FlyGalCharacter()
     delete this->sprite;
 }
 
-void FlyGalCharacter::SetImage(SDL_Texture* texture)
+void FlyGalCharacter::SetTexture(SDL_Texture* texture)
 {
     this->sprite->SetTexture(texture);
 }
@@ -48,7 +48,7 @@ void FlyGalCharacter::Hide()
 
 void FlyGalCharacter::Say(std::string text)
 {
-
+    printf("%s:\"%s\"\n",this->name.c_str(),text.c_str());
 }
 
 

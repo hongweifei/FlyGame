@@ -1,22 +1,19 @@
 
 
 
-#include "FlyScene.h"
+#include "FlyGalScene.h"
 
 
-FlyScene::FlyScene()
+FlyGalScene::FlyGalScene()
 {
 }
 
-FlyScene::FlyScene(SDL_Texture *texture,SDL_Rect *src_rect,double angle,SDL_RendererFlip flip)
+FlyGalScene::FlyGalScene(SDL_Texture *texture,SDL_Rect *src_rect,double angle,SDL_RendererFlip flip)
 {
-    this->background = texture;
-    this->background_src_rect = src_rect;
-    this->background_angle = angle;
-    this->background_flip = flip;
+    this->SetBackground(texture,src_rect,angle,flip);
 }
 
-FlyScene::FlyScene(std::vector<SDL_Texture*> texture)
+FlyGalScene::FlyGalScene(std::vector<SDL_Texture*> texture)
 {
     for (int i = 0; i < texture.size(); i++)
     {
@@ -25,7 +22,7 @@ FlyScene::FlyScene(std::vector<SDL_Texture*> texture)
     }
 }
 
-FlyScene::FlyScene(std::vector<SDL_Texture*> texture,std::vector<SDL_FRect*> dest_rect)
+FlyGalScene::FlyGalScene(std::vector<SDL_Texture*> texture,std::vector<SDL_FRect*> dest_rect)
 {
     int count = 0;
     if (texture.size() < dest_rect.size())
@@ -42,7 +39,7 @@ FlyScene::FlyScene(std::vector<SDL_Texture*> texture,std::vector<SDL_FRect*> des
     }
 }
 
-FlyScene::FlyScene(std::vector<SDL_Texture*> texture,std::vector<SDL_Rect*> src_rect,std::vector<SDL_FRect*> dest_rect)
+FlyGalScene::FlyGalScene(std::vector<SDL_Texture*> texture,std::vector<SDL_Rect*> src_rect,std::vector<SDL_FRect*> dest_rect)
 {
     int count = 0;
     if (texture.size() < dest_rect.size())
@@ -60,7 +57,7 @@ FlyScene::FlyScene(std::vector<SDL_Texture*> texture,std::vector<SDL_Rect*> src_
 }
 
 
-FlyScene::FlyScene(std::vector<SDL_Texture*> texture,std::vector<SDL_Rect*> src_rect,std::vector<SDL_FRect*> dest_rect,
+FlyGalScene::FlyGalScene(std::vector<SDL_Texture*> texture,std::vector<SDL_Rect*> src_rect,std::vector<SDL_FRect*> dest_rect,
     std::vector<double> angle,std::vector<SDL_RendererFlip> flip)
 {
     int count = 0;
@@ -80,10 +77,9 @@ FlyScene::FlyScene(std::vector<SDL_Texture*> texture,std::vector<SDL_Rect*> src_
     }
 }
 
-FlyScene::~FlyScene()
+FlyGalScene::~FlyGalScene()
 {
-    SDL_DestroyTexture(this->background);
-    SDL_free(this->background_src_rect);
+    delete this->background;
     for (int i = 0; i < this->sprite.size(); i++)
     {
         delete this->sprite[i];
@@ -92,23 +88,20 @@ FlyScene::~FlyScene()
 }
 
 
-void FlyScene::SetBackground(SDL_Texture *texture,SDL_Rect *src_rect,double angle,SDL_RendererFlip flip)
+void FlyGalScene::SetBackground(SDL_Texture *texture,SDL_Rect *src_rect,double angle,SDL_RendererFlip flip)
 {
-    this->background = texture;
-    this->background_src_rect = src_rect;
-    this->background_angle = angle;
-    this->background_flip = flip;
+    this->background->SetTexture(texture);
+    this->background->SetSrcRect(src_rect);
+    this->background->SetAngle(angle);
+    this->background->SetFlip(flip);
 }
 
-void FlyScene::SetBackground(FlySprite *sprite)
+void FlyGalScene::SetBackground(FlySprite *sprite)
 {
-    this->background = sprite->GetTexture();
-    this->background_src_rect = sprite->GetSrcRect();
-    this->background_angle = sprite->GetAngle();
-    this->background_flip = sprite->GetFlip();
+    this->background = sprite;
 }
 
-void FlyScene::SetTexture(std::vector<SDL_Texture*> texture)
+void FlyGalScene::SetTexture(std::vector<SDL_Texture*> texture)
 {
     for (int i = 0; i < texture.size(); i++)
     {
@@ -116,13 +109,13 @@ void FlyScene::SetTexture(std::vector<SDL_Texture*> texture)
     }
 }
 
-void FlyScene::SetTexture(short index,SDL_Texture *texture)
+void FlyGalScene::SetTexture(short index,SDL_Texture *texture)
 {
     this->sprite[index]->SetTexture(texture);
 }
 
 
-void FlyScene::SetSrcRect(std::vector<SDL_Rect*> rect)
+void FlyGalScene::SetSrcRect(std::vector<SDL_Rect*> rect)
 {
     for (int i = 0; i < rect.size(); i++)
     {
@@ -130,13 +123,13 @@ void FlyScene::SetSrcRect(std::vector<SDL_Rect*> rect)
     }
 }
 
-void FlyScene::SetSrcRect(short index,SDL_Rect *rect)
+void FlyGalScene::SetSrcRect(short index,SDL_Rect *rect)
 {
     this->sprite[index]->SetSrcRect(rect);
 }
 
 
-void FlyScene::SetDestRect(std::vector<SDL_FRect*> rect)
+void FlyGalScene::SetDestRect(std::vector<SDL_FRect*> rect)
 {
     for (int i = 0; i < rect.size(); i++)
     {
@@ -144,13 +137,13 @@ void FlyScene::SetDestRect(std::vector<SDL_FRect*> rect)
     }
 }
 
-void FlyScene::SetDestRect(short index,SDL_FRect *rect)
+void FlyGalScene::SetDestRect(short index,SDL_FRect *rect)
 {
     this->sprite_dest_rect[index] = rect;
 }
 
 
-void FlyScene::SetAngle(std::vector<double> angle)
+void FlyGalScene::SetAngle(std::vector<double> angle)
 {
     for (int i = 0; i < angle.size(); i++)
     {
@@ -158,13 +151,13 @@ void FlyScene::SetAngle(std::vector<double> angle)
     }
 }
 
-void FlyScene::SetAngle(short index,double angle)
+void FlyGalScene::SetAngle(short index,double angle)
 {
     this->sprite[index]->SetAngle(angle);
 }
 
 
-void FlyScene::SetFlip(std::vector<SDL_RendererFlip> flip)
+void FlyGalScene::SetFlip(std::vector<SDL_RendererFlip> flip)
 {
     for (int i = 0; i < flip.size(); i++)
     {
@@ -172,39 +165,51 @@ void FlyScene::SetFlip(std::vector<SDL_RendererFlip> flip)
     }
 }
 
-void FlyScene::SetFlip(short index,SDL_RendererFlip flip)
+void FlyGalScene::SetFlip(short index,SDL_RendererFlip flip)
 {
     this->sprite[index]->SetFlip(flip);
 }
 
 
-void FlyScene::Render(SDL_Renderer *renderer)
+void FlyGalScene::Render(SDL_Renderer *renderer)
 {
-    SDL_RenderCopyEx(renderer,this->background,this->background_src_rect,NULL,this->background_angle,NULL,this->background_flip);
+    this->background->Render(renderer);
     for (int i = 0; i < this->sprite.size(); i++)
     {
         int error = this->sprite[i]->Render(renderer,this->sprite_dest_rect[i]);
-        if (error == -1)
-        {
-            //printf("%s\n",SDL_GetError());
-        }
     }
 }
 
-
-void FlyScene::Add(SDL_Texture *texture,SDL_FRect *dest_rect)
+void FlyGalScene::AddSprite(FlySprite *sprite,SDL_FRect *dest_rect)
 {
-    this->Add(texture,NULL,dest_rect,0,SDL_FLIP_NONE);
+    this->sprite.push_back(sprite);
+    this->sprite_dest_rect.push_back(dest_rect);
+}
+
+void FlyGalScene::AddSprite(FlySprite *sprite,float x,float y,float w,float h)
+{
+    SDL_FRect *rect = new SDL_FRect();
+    rect->x = x;
+    rect->y = y;
+    rect->w = w;
+    rect->h = h;
+    this->sprite.push_back(sprite);
+    this->sprite_dest_rect.push_back(rect);
+}
+
+void FlyGalScene::AddSprite(SDL_Texture *texture,SDL_FRect *dest_rect)
+{
+    this->AddSprite(texture,NULL,dest_rect,0,SDL_FLIP_NONE);
 }
 
 /*
-void FlyScene::Add(SDL_Texture *texture,SDL_Rect *src_rect,SDL_FRect *dest_rect,double angle)
+void FlyGalScene::Add(SDL_Texture *texture,SDL_Rect *src_rect,SDL_FRect *dest_rect,double angle)
 {
     this->Add(texture,src_rect,dest_rect,angle,SDL_FLIP_NONE);
 }
 */
 
-void FlyScene::Add(SDL_Texture *texture,SDL_Rect *src_rect,SDL_FRect *dest_rect,double angle,SDL_RendererFlip flip)
+void FlyGalScene::AddSprite(SDL_Texture *texture,SDL_Rect *src_rect,SDL_FRect *dest_rect,double angle,SDL_RendererFlip flip)
 {
     this->sprite.push_back(new FlySprite(texture,src_rect,angle,flip));
     this->sprite_dest_rect.push_back(dest_rect);
